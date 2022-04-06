@@ -97,7 +97,7 @@ def getDrawNum(toCheck, index):
     index += 1
     return toCheck, index
 
-puzzleList = input[2:].split("\n")
+puzzleList = input[2:]
 # for i in range(0, len(puzzleInput) - 1):
 #     boardList = list()
 #     if i == 0 or i % 5 != 0 or puzzleInput[i] != ['\n']:
@@ -109,6 +109,8 @@ toCheck = list()
 
 while i < len(draw_num):
     print("Draw: ", draw_num[i])
+    # TODO: if
+        puzzleStartLine = 0
     if i == 0 or i % 5 != 0:
         toCheck, i = getDrawNum(toCheck, i)
     else:
