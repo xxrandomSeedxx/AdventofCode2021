@@ -106,12 +106,12 @@ puzzleList = input[2:]
 print("Board list: \n", puzzleList)
 i = 0
 toCheck = list()
-
+puzzleStartLine = 0
 while i < len(draw_num):
     print("Draw: ", draw_num[i])
-    # TODO: if
+    if i > len(puzzleList):
         puzzleStartLine = 0
-    if i == 0 or i % 5 != 0:
+    if (i == 0 or i % 5 != 0) and i <= 5:
         toCheck, i = getDrawNum(toCheck, i)
     else:
         print("Start line: ", puzzleStartLine)
