@@ -8,7 +8,7 @@ draw_num = input[0].split(",")
 def checkHorizontal(toCheck, puzzleLines):
     for i in range(0, len(puzzleLines)):
         line = puzzleLines[i]
-        print("horz", line)
+        # print("horz", line)
         count = 0
         for digit in toCheck:
             if digit not in line:
@@ -29,7 +29,7 @@ def checkVertical(toCheck, puzzleLines):
         count = 0
         for j in range(0, len(puzzleLines)):
             vertLine.append(puzzleLines[j][i])  # extract nth digit on every line to form vertival line
-        print("vert", vertLine)
+        # print("vert", vertLine)
         for digit in toCheck:
             if digit not in vertLine:
                 break
@@ -51,7 +51,7 @@ def checkDiagonal(toCheck, puzzleLines):
         diagonalLineTL.append(puzzleLines[i][i])
         diagonalLineBL.append(puzzleLines[i][desd_count])
         desd_count -= 1
-    print("Diagonal:", diagonalLineTL, diagonalLineBL)
+    # print("Diagonal:", diagonalLineTL, diagonalLineBL)
     countTL = 0
     countBL = 0
     for digit in toCheck:
@@ -59,7 +59,7 @@ def checkDiagonal(toCheck, puzzleLines):
             countTL += 1
         if digit in diagonalLineBL:
             countBL += 1
-    if countTL == 5 or countBL ==5:
+    if countTL == 5 or countBL == 5:
         return True
     return False
 
@@ -103,13 +103,13 @@ puzzleList = input[2:]
 #     if i == 0 or i % 5 != 0 or puzzleInput[i] != ['\n']:
 #         boardList.append(puzzleInput[i])
 #     puzzleList.append(boardList)
-print("Board list: \n", puzzleList)
+# print("Board list: \n", puzzleList)
 i = 0
 toCheck = list()
 puzzleStartLine = 0
 while i < len(draw_num):
     print("Draw: ", draw_num[i])
-    if i > len(puzzleList):
+    if puzzleStartLine > len(puzzleList):
         puzzleStartLine = 0
     if (i == 0 or i % 5 != 0) and i <= 5:
         toCheck, i = getDrawNum(toCheck, i)
@@ -121,5 +121,6 @@ while i < len(draw_num):
             print("Board to check: \n", boardToCheck)
             checkBoard(toCheck, boardToCheck)  # pass in a set of drawnums and list of 5 lines puzzle
             puzzleStartLine += 6
+        i += 1
 
         toCheck, i = getDrawNum(toCheck, i)
