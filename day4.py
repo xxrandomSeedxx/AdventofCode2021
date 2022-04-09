@@ -75,21 +75,26 @@ def checkBoard(toCheck, boardToCheck):
         print("Match >>>>>>>>>>>>>>")
 
 
-def getBoard(puzzleStartLine, puzzleList):
-    boardToCheck = list()
-    for i in range(puzzleStartLine, puzzleStartLine + 5):
+def getBoard(puzzleList):
+    boardsToCheck = list()
+    for i in range(0, len(puzzleList) - 1):
+        currBoard = list()
         try:
             puzzleLine = puzzleList[i].split(" ")  # '22 13 17 11  0\n' -->  ["22", "13", "17", " ", "0"]
-            for i in range(0, 5):  # check every digit str in line and reform into a list of int
-                if puzzleLine[i] == "":
-                    puzzleLine.pop(i)
-                if "\n" in puzzleLine[i]:
-                    puzzleLine[i] = puzzleLine[i].strip("\n")
-                puzzleLine[i] = int(puzzleLine[i])
-            boardToCheck.append(puzzleLine)
+            print("puzzleLine: ",puzzleLine)
+            if puzzleLine != ["\n"]:
+                for j in range(0, 5):  # check every digit str in line and reform into a list of int
+                    if puzzleLine[j] == "":
+                        puzzleLine.pop(j)
+                    if "\n" in puzzleLine[j]:
+                        puzzleLine[j] = puzzleLine[j].strip("\n")
+                    puzzleLine[j] = int(puzzleLine[j])
+                currBoard.append(puzzleLine)
         except IndexError:
             pass
-    return boardToCheck
+        print("currBoard: ", currBoard)
+        boardsToCheck.append(currBoard)
+    return boardsToCheck
 
 
 def getDrawNum(toCheck, index):
@@ -107,6 +112,7 @@ puzzleList = input[2:]
 i = 0
 toCheck = list()
 puzzleStartLine = 0
+boardsToCheck = getBoard(puzzleList)
 while i < len(draw_num):
     print("Draw: ", draw_num[i])
     if puzzleStartLine > len(puzzleList):
@@ -115,12 +121,12 @@ while i < len(draw_num):
         toCheck, i = getDrawNum(toCheck, i)
     else:
         print("Start line: ", puzzleStartLine)
-        boardToCheck = getBoard(puzzleStartLine, puzzleList)
-        if boardToCheck != []:
+        # boardToCheck = getBoard(puzzleStartLine, puzzleList)
+        for board in boardsToCheck:
             print("Digits to check:", toCheck)
-            print("Board to check: \n", boardToCheck)
-            checkBoard(toCheck, boardToCheck)  # pass in a set of drawnums and list of 5 lines puzzle
-            puzzleStartLine += 6
+            print("Board to check: \n", board)
+            checkBoard(toCheck, board)  # pass in a set of drawnums and list of 5 lines puzzle
+
         i += 1
 
         toCheck, i = getDrawNum(toCheck, i)
