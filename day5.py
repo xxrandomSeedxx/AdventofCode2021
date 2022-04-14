@@ -3,7 +3,6 @@ import sys
 
 input = sys.stdin.readlines()
 
-
 def store_full_coods(start, end, value):
     line_full_cood = list()
     start = start[value]
@@ -13,15 +12,16 @@ def store_full_coods(start, end, value):
 for num_grp in input:
     all_coods = list()
     try:
-        coods = num_grp.strip("\n").split(" -> ")
-        start = coods[0]  # 0,9
-        end = coods[1]  # 5,9
+        cood_grp = num_grp.strip("\n").split(" -> ")
+        start = cood_grp[0].split(",")  # ['432,708', '432,160'] -> [[432,708], [432,160]]
+        end = cood_grp[1].split(",")
+        print(start, end)
         # compare x
         if start[0] == end[0]:
             print("x coods are same")
-            store_full_coods(start, end, 2)
-        # compare y (set[1] is ",")
-        elif start[2] == end[2]:
+            store_full_coods(start, end, 1)
+        # compare y
+        elif start[1] == end[1]:
             print("y coods are same")
             store_full_coods(start, end, 0)
     except IndexError:
