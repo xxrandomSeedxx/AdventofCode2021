@@ -8,7 +8,7 @@ draw_num = input[0].split(",")
 def checkHorizontal(toCheck, puzzleLines):
     for i in range(0, len(puzzleLines)):
         line = puzzleLines[i]
-        print("horz", line)
+        # print("horz", line)
         count = 0
         for digit in toCheck:
             if digit not in line:
@@ -29,7 +29,7 @@ def checkVertical(toCheck, puzzleLines):
         count = 0
         for j in range(0, len(puzzleLines)):
             vertLine.append(puzzleLines[j][i])  # extract nth digit on every line to form vertival line
-        print("vert", vertLine)
+        # print("vert", vertLine)
         for digit in toCheck:
             if digit not in vertLine:
                 continue
@@ -105,6 +105,18 @@ def getBoard(puzzleList):
             boardsToCheck.append(currBoard)
     return boardsToCheck
 
+def getUnmarkedSum(toCheck, board):
+    # print("+++++++++", toCheck, board)
+    new_board = list()
+    for line in board:
+        for digit in line:
+            if digit not in toCheck:
+                new_board.append(digit)
+    sum = 0
+    for item in new_board:
+        sum += item
+    return sum
+
 
 def getDrawNum(toCheck, index):
     toCheck.append(int(draw_num[index]))
@@ -138,7 +150,9 @@ while i < len(draw_num) and not bingo:
             bingo = checkBoard(toCheck, board)  # pass in a set of drawnums and list of 5 lines puzzle
             if bingo:
                 print("Bingo! ")
-                print(board)
+                sum = getUnmarkedSum(toCheck, board)
+                result = sum * toCheck[-1]
+                print(sum, toCheck[-1], result)
                 break
         # i += 1
         toCheck, i = getDrawNum(toCheck, i)
