@@ -1,9 +1,6 @@
 #!/usr/bin/python
 import sys
 
-input = sys.stdin.readlines()
-draw_num = input[0].split(",")
-
 
 def checkHorizontal(toCheck, puzzleLines):
     for i in range(0, len(puzzleLines)):
@@ -70,14 +67,13 @@ def checkDiagonal(toCheck, puzzleLines):
 def checkBoard(toCheck, boardToCheck):
     gotMatch = None
     # every time
-    print(">>>>>>>>", toCheck)
+    # print(">>>>>>>>", toCheck)
     gotMatch = checkHorizontal(toCheck, boardToCheck)
     if not gotMatch:
         gotMatch = checkVertical(toCheck, boardToCheck)
     # if not gotMatch:
     #     gotMatch = checkDiagonal(toCheck, boardToCheck)
     if gotMatch:
-        print("Match >>>>>>>>>>>>>>")
         return True
 
 
@@ -99,21 +95,22 @@ def getBoard(puzzleList):
                     puzzleLine[j] = int(puzzleLine[j])
                 currBoard.append(puzzleLine)
         except IndexError:
-            pass
-        # print("currBoard: ", currBoard)
-        if i % 5 == 0:
+            continue
+        if i == 5 or (i != 0 and i % 6 == 0):
+            # print(">>>>\n{}".format(currBoard))
             boardsToCheck.append(currBoard)
+    # print("++++", boardsToCheck[0], boardsToCheck[-1])
     return boardsToCheck
 
 def getUnmarkedSum(toCheck, board):
-    # print("+++++++++", toCheck, board)
-    new_board = list()
+    unmarked_list = list()
     for line in board:
         for digit in line:
             if digit not in toCheck:
-                new_board.append(digit)
+                unmarked_list.append(digit)
+    print("unmarked_list", unmarked_list)
     sum = 0
-    for item in new_board:
+    for item in unmarked_list:
         sum += item
     return sum
 
@@ -123,31 +120,48 @@ def getDrawNum(toCheck, index):
     index += 1
     return toCheck, index
 
+input = sys.stdin.readlines()
+draw_num = input[0].split(",")
 puzzleList = input[2:]
-
 i = 0
 toCheck = list()
 bingo = False
 puzzleStartLine = 0
 boardsToCheck = getBoard(puzzleList)
-print("Board to check: \n", boardsToCheck)
-while i < len(draw_num) and not bingo:
+# print("Boards to check: \n", boardsToCheck)
+print(len(draw_num), len(boardsToCheck))
+
+while i < len(draw_num):
     # print("Draw: ", toCheck)
+    boardsToRemove = list()
     if puzzleStartLine > len(puzzleList):
         puzzleStartLine = 0
+    # After the 5th draw num, check all boards for every number drawn
     if (i == 0 or i % 5 != 0) and i <= 5:
         toCheck, i = getDrawNum(toCheck, i)
-        # print("Digits to check:", toCheck)
     else:
         # print("Start line: ", puzzleStartLine)
         for board in boardsToCheck:
-            # print("Board to check: \n", board)
+            # print("\nChecking board: \n", board)
             bingo = checkBoard(toCheck, board)  # pass in a set of drawnums and list of 5 lines puzzle
             if bingo:
-                print("Bingo! ")
-                sum = getUnmarkedSum(toCheck, board)
-                result = sum * toCheck[-1]
-                print(sum, toCheck[-1], result)
-                break
-        # i += 1
-        toCheck, i = getDrawNum(toCheck, i)
+                curr_board_index = boardsToCheck.index(board)
+                # there might be multiple boards to remove at each round
+                if curr_board_index not in boardsToRemove:
+                    print("\nBoard {} bingo!".format(curr_board_index))
+                    print(board)
+                    boardsToRemove.append(curr_board_index)
+                    print("index of board to remove: ", boardsToRemove)
+
+                if len(boardsToCheck) == 1:
+                    sum = getUnmarkedSum(toCheck, board)
+                    result = sum * toCheck[-1]
+                    print("Sum {} Draw {} Result {}".format(sum, toCheck[-1], result))
+
+    for boardNum in boardsToRemove:
+        latestIndex = boardNum - boardsToRemove.index(boardNum)
+        # print("Removing {}\n{}".format(latestIndex, boardsToCheck[latestIndex]))
+        boardsToCheck.pop(latestIndex)
+        print("remaining: {}".format(len(boardsToCheck)))
+    bingo = False
+    toCheck, i = getDrawNum(toCheck, i)
